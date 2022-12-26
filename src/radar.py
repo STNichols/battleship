@@ -3,8 +3,11 @@ Radar Class for simulating a radar
 """
 
 # Extended Python
+import matplotlib.colors as mcolors
 import numpy as np
 import pandas as pd
+import plotly.figure_factory as ff
+import plotly.graph_objects as go
 
 # Battleship Python
 from .utils import (
@@ -13,6 +16,8 @@ from .utils import (
 )
 
 # Constants
+FULL_FIGURE_HEIGHT = 700  
+FULL_FIGURE_WIDTH = 1100
 MIN_RANGE = 0
 MIN_PHI = 0
 MAX_PHI = 90
@@ -26,6 +31,7 @@ class Radar:
     def __init__(self, range, theta, phi):
         """ Initialize the radar and check inputs """
         self.check_radar_inputs(range, theta, phi)
+        self.generate_sector()
 
     def check_radar_inputs(self, range, theta, phi):
         """ Check validity of radar inputs """
@@ -108,3 +114,18 @@ class Radar:
 
         self.sector = sector
         self.simplices = simplices
+
+    def plot(self):
+        """ Plot the radar 3D volume """
+        fig = ff.create_trisurf(
+            x=self.sector['x'].values, 
+            y=self.sector['y'].values,
+            z=self.sector['z'].values,
+            simplices=self.simplices,
+            colormap=[mcolors.to_hex('green')] * 2,
+            show_colorbar=False
+        )
+        fig['data'][0].update(opacity=0.5)
+
+        fig.update_layout(title="Searching", width=FULL_FIGURE_WIDTH, height=FULL_FIGURE_HEIGHT)
+        return fig
