@@ -10,14 +10,16 @@ import plotly.figure_factory as ff
 import plotly.graph_objects as go
 
 # Battleship Python
-from .utils import (
+from battleship.params import (
+    FULL_FIGURE_HEIGHT,
+    FULL_FIGURE_WIDTH
+)
+from battleship.utils import (
     generate_polar_simplices,
     polar_to_cartesian
 )
 
 # Constants
-FULL_FIGURE_HEIGHT = 700  
-FULL_FIGURE_WIDTH = 1100
 MIN_RANGE = 0
 MIN_PHI = 0
 MAX_PHI = 90
@@ -110,7 +112,7 @@ class Radar:
         })
 
         # Generate simplicies
-        sector, simplices = generate_polar_simplices(n)
+        simplices = generate_polar_simplices(n)
 
         self.sector = sector
         self.simplices = simplices
