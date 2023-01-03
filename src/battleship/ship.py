@@ -6,6 +6,7 @@ Ship Class for simulating a ship
 import plotly.graph_objects as go
 
 # Battleship Python
+from battleship.object import Object
 from battleship.params import (
     FULL_FIGURE_HEIGHT,
     FULL_FIGURE_WIDTH
@@ -16,7 +17,7 @@ from battleship.radar import Radar
 DEFAULT_LOCATION_Z = 0
 
 
-class Ship:
+class Ship(Object):
 
     def __init__(self, location_x, location_y, name=""):
         """ Initialize a Ship """

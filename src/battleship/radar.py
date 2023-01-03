@@ -10,6 +10,7 @@ import plotly.figure_factory as ff
 import plotly.graph_objects as go
 
 # Battleship Python
+from battleship.object import Object
 from battleship.params import (
     FULL_FIGURE_HEIGHT,
     FULL_FIGURE_WIDTH
@@ -28,7 +29,7 @@ MAX_THETA = 360
 N_IN_SECTOR = 10
 
 
-class Radar:
+class Radar(Object):
 
     def __init__(self, range, theta, phi):
         """ Initialize the radar and check inputs """
