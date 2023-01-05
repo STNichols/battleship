@@ -21,15 +21,26 @@ class Ship(Object):
 
     def __init__(self, location_x, location_y, name=""):
         """ Initialize a Ship """
+        super(Ship, self).__init__(pos_x=location_x, pos_y=location_y, pos_z=DEFAULT_LOCATION_Z)
+
         self.name = name or "ship"
         self.location_x = location_x
         self.location_y = location_y
         self.location_z = DEFAULT_LOCATION_Z
 
         self.radar = None
+
+    def add_to_environment(self, environment):
+        """ Add object within environment """
+        object_id = environment.create_new_object(
+            self.location_x,
+            self.location_y,
+            self.location_z
+        )
+        self.set_object_id(object_id)
     
     def setup_radar(self, range, theta, phi):
-        """ """
+        """ Setup the radar on the ship """
         self.radar = Radar(
             range=range,
             theta=theta,
@@ -38,8 +49,9 @@ class Ship(Object):
         
     def plot(self):
         """ Plot the ship and all components of it """
+        x, y, z = self.get_current_position()
         fig = go.Figure(
-            data=go.Scatter3d(x=[0], y=[0], z=[0], marker=dict(color="blue"), name=self.name)
+            data=go.Scatter3d(x=[x], y=[y], z=[z], marker=dict(color="blue"), name=self.name)
         )
 
         if self.radar:

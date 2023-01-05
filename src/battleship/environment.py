@@ -61,17 +61,19 @@ class Environment:
         )
         name = os.path.join(output, ENVIRONMENT_STATE_NAME)
         print(name)
-        table.to_csv(name)
+        table.to_csv(name, index=False)
 
     def update_object_state(self, pos_x, pos_y, pos_z, object_id):
         """ Update the state of an object """
         is_object = self.object_states[:, OBJECT_ID_COL] == object_id
         self.object_states[is_object, :OBJECT_ID_COL] = np.array([pos_x, pos_y, pos_z])
 
-    def update(self):
+    def update(self, new_time):
         """ Add current object states to object timeline """
+        self.current_time = new_time
+
         obj_states = self.object_states
-        obj_times = np.ones((obj_states.shape[0], 1))
+        obj_times = np.ones((obj_states.shape[0], 1)) * self.current_time
         obj_states = np.hstack([obj_states, obj_times])
 
         self.object_timeline = np.vstack([

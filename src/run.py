@@ -23,20 +23,21 @@ def run():
 
     environment = Environment()
 
-    missile = Missile(current_time=t, pos_x=0, pos_y=0, pos_z=0, vel_i=100, theta=45, phi=45)
+    missile = Missile(current_time=t, pos_x=0, pos_y=0, pos_z=0, vel_i=200, theta=45, phi=45)
     missile.add_to_environment(environment)
 
     dt = 1
     while missile.exists:
         t += dt
-        print(t)
 
         missile.update(environment, t)
 
         # Last step, update environment
-        environment.update()
+        environment.update(t)
 
     environment.remove_object(missile)
+
+    print(f"\nTotal time: {t}s\n")
 
     os.makedirs(OUTPUT, exist_ok=True)
     environment.to_file(OUTPUT)

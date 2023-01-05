@@ -31,8 +31,9 @@ N_IN_SECTOR = 10
 
 class Radar(Object):
 
-    def __init__(self, range, theta, phi):
+    def __init__(self, range, theta, phi, name=""):
         """ Initialize the radar and check inputs """
+        self._name = name or "radar"
         self.check_radar_inputs(range, theta, phi)
         self.generate_sector()
 
