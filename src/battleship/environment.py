@@ -60,7 +60,6 @@ class Environment:
             columns=STATE_COLUMNS
         )
         name = os.path.join(output, ENVIRONMENT_STATE_NAME)
-        print(name)
         table.to_csv(name, index=False)
 
     def update_object_state(self, pos_x, pos_y, pos_z, object_id):

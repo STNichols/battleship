@@ -2,7 +2,11 @@
 Ship Class for simulating a ship
 """
 
+# Base Python
+import os
+
 # Extended Python
+import pandas as pd
 import plotly.graph_objects as go
 
 # Battleship Python
@@ -15,6 +19,7 @@ from battleship.radar import Radar
 
 # Constants
 DEFAULT_LOCATION_Z = 0
+SHIP_LOCATION_FILE = "ship_location.csv"
 
 
 class Ship(Object):
@@ -60,3 +65,21 @@ class Ship(Object):
         
         fig.update_layout(width=FULL_FIGURE_WIDTH, height=FULL_FIGURE_HEIGHT)
         return fig
+
+    def to_file(self, output):
+        """ Save object timeline to file """
+        table = pd.DataFrame({
+            "name": [self.name],
+            "location_x": [self.location_x],
+            "location_y": [self.location_y],
+            "location_z": [self.location_z],
+        })
+        name = os.path.join(output, SHIP_LOCATION_FILE)
+        table.to_csv(name, index=False)
+
+        if self.radar is not None:
+            self.radar.to_file(output)
+
+    def update(self):
+        """ Update the ship location (not yet implemented) """
+        raise NotImplementedError("The ship is not able to be updated")
