@@ -2,6 +2,9 @@
 Radar Class for simulating a radar
 """
 
+# Base Python
+import os
+
 # Extended Python
 import matplotlib.colors as mcolors
 import numpy as np
@@ -10,6 +13,7 @@ import plotly.figure_factory as ff
 import plotly.graph_objects as go
 
 # Battleship Python
+from battleship.object import Object
 from battleship.params import (
     FULL_FIGURE_HEIGHT,
     FULL_FIGURE_WIDTH
@@ -26,12 +30,14 @@ MAX_PHI = 90
 MIN_THETA = 0
 MAX_THETA = 360
 N_IN_SECTOR = 10
+RADAR_FILE_NAME = "radar_sector.csv"
 
 
-class Radar:
+class Radar(Object):
 
-    def __init__(self, range, theta, phi):
+    def __init__(self, range, theta, phi, name=""):
         """ Initialize the radar and check inputs """
+        self._name = name or "radar"
         self.check_radar_inputs(range, theta, phi)
         self.generate_sector()
 
@@ -131,3 +137,20 @@ class Radar:
 
         fig.update_layout(title="Searching", width=FULL_FIGURE_WIDTH, height=FULL_FIGURE_HEIGHT)
         return fig
+
+    def to_file(self, output):
+        """ Save object timeline to file """
+        table = pd.DataFrame({
+            "min_range": [self.min_range],
+            "max_range": [self.max_range],
+            "min_theta": [self.min_theta],
+            "max_theta": [self.max_theta],
+            "min_phi": [self.min_phi],
+            "max_phi": [self.max_phi],
+        })
+        name = os.path.join(output, RADAR_FILE_NAME)
+        table.to_csv(name, index=False)
+
+    def update(self):
+        """ Update the radar (not yet implemented) """
+        raise NotImplementedError("The radar is not able to be updated")
