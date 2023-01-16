@@ -12,23 +12,24 @@ import plotly.graph_objects as go
 # Battleship Python
 from battleship.object import Object
 from battleship.params import (
+    DEFAULT_LOCATION_Z,
     FULL_FIGURE_HEIGHT,
     FULL_FIGURE_WIDTH
 )
 from battleship.radar import Radar
 
 # Constants
-DEFAULT_LOCATION_Z = 0
 SHIP_LOCATION_FILE = "ship_location.csv"
 
 
 class Ship(Object):
 
-    def __init__(self, location_x, location_y, name=""):
+    def __init__(self, location_x, location_y, name="", color=None):
         """ Initialize a Ship """
         super(Ship, self).__init__(pos_x=location_x, pos_y=location_y, pos_z=DEFAULT_LOCATION_Z)
 
         self.name = name or "ship"
+        self.set_color(color)
         self.location_x = location_x
         self.location_y = location_y
         self.location_z = DEFAULT_LOCATION_Z
@@ -47,20 +48,26 @@ class Ship(Object):
     def setup_radar(self, range, theta, phi):
         """ Setup the radar on the ship """
         self.radar = Radar(
+            location_x=self.location_x,
+            location_y=self.location_y,
             range=range,
             theta=theta,
             phi=phi,
         )
+        color = self.get_color()
+        if color is not None:
+            self.radar.set_color(color)
         
-    def plot(self):
+    def plot(self, color="blue"):
         """ Plot the ship and all components of it """
+        color = self.get_color() or color
         x, y, z = self.get_current_position()
         fig = go.Figure(
-            data=go.Scatter3d(x=[x], y=[y], z=[z], marker=dict(color="blue"), name=self.name)
+            data=go.Scatter3d(x=[x], y=[y], z=[z], marker=dict(color=color), name=self.name)
         )
 
         if self.radar:
-            radar_fig = self.radar.plot()
+            radar_fig = self.radar.plot(color=color)
             fig = go.Figure(data=fig.data + radar_fig.data)
         
         fig.update_layout(width=FULL_FIGURE_WIDTH, height=FULL_FIGURE_HEIGHT)

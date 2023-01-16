@@ -7,9 +7,11 @@ import os
 import pathlib
 
 # Battleship Python
-from battleship import Environment
-from battleship import Missile
-from battleship import Ship
+from battleship import (
+    Environment,
+    Missile,
+    Ship
+)
 
 # Constants
 HOME = pathlib.Path().home()
@@ -31,7 +33,15 @@ def run():
     ship.setup_radar([100, 150], [40, 60], phi=[20, 30])
 
     # Create a missile
-    missile = Missile(current_time=t, pos_x=0, pos_y=0, pos_z=0, vel_i=200, theta=45, phi=45)
+    missile = Missile(
+        current_time=t,
+        pos_x=0,
+        pos_y=0,
+        pos_z=0,
+        vel_i=200,
+        theta=45,
+        phi=45
+    )
     missile.add_to_environment(environment)
 
     dt = 1

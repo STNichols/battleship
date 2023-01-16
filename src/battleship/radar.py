@@ -15,6 +15,7 @@ import plotly.graph_objects as go
 # Battleship Python
 from battleship.object import Object
 from battleship.params import (
+    DEFAULT_LOCATION_Z,
     FULL_FIGURE_HEIGHT,
     FULL_FIGURE_WIDTH
 )
@@ -35,8 +36,9 @@ RADAR_FILE_NAME = "radar_sector.csv"
 
 class Radar(Object):
 
-    def __init__(self, range, theta, phi, name=""):
+    def __init__(self, location_x, location_y, range, theta, phi, name=""):
         """ Initialize the radar and check inputs """
+        super(Radar, self).__init__(pos_x=location_x, pos_y=location_y, pos_z=DEFAULT_LOCATION_Z)
         self._name = name or "radar"
         self.check_radar_inputs(range, theta, phi)
         self.generate_sector()
@@ -111,6 +113,8 @@ class Radar(Object):
 
         # Create a dataframe of catersian coordinates
         x, y, z = polar_to_cartesian(r_mesh, theta_mesh, phi_mesh)
+        x += self.pos_x
+        y += self.pos_y
         sector = pd.DataFrame({
             "x": x,
             "y": y,
@@ -123,14 +127,15 @@ class Radar(Object):
         self.sector = sector
         self.simplices = simplices
 
-    def plot(self):
+    def plot(self, color="#109618"):
         """ Plot the radar 3D volume """
+        color = self.get_color() or color
         fig = ff.create_trisurf(
             x=self.sector['x'].values, 
             y=self.sector['y'].values,
             z=self.sector['z'].values,
             simplices=self.simplices,
-            colormap=[mcolors.to_hex('green')] * 2,
+            colormap=[color] * 2,
             show_colorbar=False
         )
         fig['data'][0].update(opacity=0.5)
